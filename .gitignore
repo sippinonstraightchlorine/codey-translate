@@ -1,0 +1,4 @@
+ceviri_venv/
+__pycache__/
+*.pyc
+*.sqlite3
