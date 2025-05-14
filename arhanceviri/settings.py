@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-9&k#80g71i%8wg1++=ar%nt!&zzvocwrtm_*1v6rm&id%2eg&&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['codey-translate.onrender.com']
+ALLOWED_HOSTS = [
+    'codey-translate.onrender.com',
+    'codeytranslate.xyz',
+    'www.codeytranslate.xyz'
+    ]
 
 
 # Application definition
