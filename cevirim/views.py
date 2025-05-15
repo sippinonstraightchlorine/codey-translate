@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from googletrans import Translator, LANGUAGES
 from datetime import datetime
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 
 def ceviri_view(request):
     translated_text = None
@@ -49,3 +51,26 @@ def ceviri_view(request):
         "gecmis": gecmis,
         "istatistik": toplam_ceviri
     })
+
+
+@require_GET
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Disallow:",
+        "Sitemap: https://codeytranslate.xyz/sitemap.xml"
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
+
+@require_GET
+def sitemap_xml(request):
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://codeytranslate.xyz/</loc>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+   </url>
+</urlset>
+"""
+    return HttpResponse(content, content_type="application/xml")
