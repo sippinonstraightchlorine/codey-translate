@@ -13,6 +13,10 @@ class CeviriIstegi(BaseModel):
 @app.post("/translate")
 def ceviri_yap(istek: CeviriIstegi):
     try:
+        # Boş metin kontrolü
+        if not istek.q.strip():
+            return {"error": "Lütfen bir yazı giriniz."}
+
         sonuc = translator.translate(istek.q, src=istek.source, dest=istek.target)
         return {"translatedText": sonuc.text}
     except Exception as e:
