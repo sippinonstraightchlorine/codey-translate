@@ -103,16 +103,25 @@
 </div>
 
 <script>
+let algilananDil = null;  // globalde tanımla
+
 function ceviriYap(e) {
     e.preventDefault();
+
     const q = document.getElementById("q").value;
     const source = document.getElementById("source").value;
     const target = document.getElementById("target").value;
 
     fetch("https://ceviri-api.onrender.com/translate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ q: q, source: source, target: target })
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            q: q,
+            source: source,
+            target: target
+        })
     })
     .then(res => res.json())
     .then(data => {
@@ -122,6 +131,8 @@ function ceviriYap(e) {
         if (data.error) {
             alert(data.error);
         } else {
+            algilananDil = data.detectedSourceLang;  // 👈 algılanan dili global değişkende sakla
+
             const alertDiv = document.createElement("div");
             alertDiv.className = "alert alert-success";
             alertDiv.innerHTML = `
@@ -132,12 +143,12 @@ function ceviriYap(e) {
             `;
             container.appendChild(alertDiv);
 
-            // geçmişe ekle
             addToHistory(q, source, target, data.translatedText);
         }
     })
     .catch(err => alert("Hata oluştu: " + err));
 }
+
 
 function addToHistory(q, source, target, result) {
     const history = JSON.parse(localStorage.getItem("translationHistory") || "[]");
@@ -183,12 +194,21 @@ function toggleTheme() {
 }
 
 function swapLangs() {
-    const source = document.getElementById("source");
-    const target = document.getElementById("target");
-    const temp = source.value;
-    source.value = target.value;
-    target.value = temp;
+    const sourceSelect = document.getElementById("source");
+    const targetSelect = document.getElementById("target");
+
+    const sourceVal = sourceSelect.value;
+    const targetVal = targetSelect.value;
+
+    if (sourceVal === "auto" && algilananDil) {
+        sourceSelect.value = targetVal;
+        targetSelect.value = algilananDil;
+    } else {
+        sourceSelect.value = targetVal;
+        targetSelect.value = sourceVal;
+    }
 }
+
 
 window.addEventListener("DOMContentLoaded", () => {
     updateHistoryUI();
